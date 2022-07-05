@@ -1,0 +1,17 @@
+C:\Users\Dev\source\repos\C2Send\C2Send\bin\Debug\net6.0\C2Send.exe
+C:\Users\Dev\source\repos\C2Send\C2Send\bin\Debug\net6.0\C2Send.deps.json
+C:\Users\Dev\source\repos\C2Send\C2Send\bin\Debug\net6.0\C2Send.runtimeconfig.json
+C:\Users\Dev\source\repos\C2Send\C2Send\bin\Debug\net6.0\C2Send.dll
+C:\Users\Dev\source\repos\C2Send\C2Send\bin\Debug\net6.0\C2Send.pdb
+C:\Users\Dev\source\repos\C2Send\C2Send\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\Dev\source\repos\C2Send\C2Send\obj\Debug\net6.0\C2Send.csproj.AssemblyReference.cache
+C:\Users\Dev\source\repos\C2Send\C2Send\obj\Debug\net6.0\C2Send.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Dev\source\repos\C2Send\C2Send\obj\Debug\net6.0\C2Send.AssemblyInfoInputs.cache
+C:\Users\Dev\source\repos\C2Send\C2Send\obj\Debug\net6.0\C2Send.AssemblyInfo.cs
+C:\Users\Dev\source\repos\C2Send\C2Send\obj\Debug\net6.0\C2Send.csproj.CoreCompileInputs.cache
+C:\Users\Dev\source\repos\C2Send\C2Send\obj\Debug\net6.0\C2Send.csproj.CopyComplete
+C:\Users\Dev\source\repos\C2Send\C2Send\obj\Debug\net6.0\C2Send.dll
+C:\Users\Dev\source\repos\C2Send\C2Send\obj\Debug\net6.0\refint\C2Send.dll
+C:\Users\Dev\source\repos\C2Send\C2Send\obj\Debug\net6.0\C2Send.pdb
+C:\Users\Dev\source\repos\C2Send\C2Send\obj\Debug\net6.0\C2Send.genruntimeconfig.cache
+C:\Users\Dev\source\repos\C2Send\C2Send\obj\Debug\net6.0\ref\C2Send.dll
