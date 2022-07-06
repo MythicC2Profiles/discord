@@ -1,4 +1,4 @@
-# http
+# discord
 
 This is a Mythic C2 Profile called http. It simply provides a way to get HTTP messages off the wire and forward them to the Mythic server. This profiles includes:
 
