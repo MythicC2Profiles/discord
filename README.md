@@ -1,12 +1,7 @@
 # discord
 
-This is a Mythic C2 Profile called http. It simply provides a way to get HTTP messages off the wire and forward them to the Mythic server. This profiles includes:
+A C2 profile that uses the Discord REST API for communication. 
 
-* Kill Dates
-* Sleep Intervals
-* Custom Headers
-* Proxy Information
-* Support for SSL
 
 The c2 profile has `mythic_c2_container==0.0.23` PyPi package installed and reports to Mythic as version "4".
 
