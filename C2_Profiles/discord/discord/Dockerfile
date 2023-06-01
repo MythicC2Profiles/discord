@@ -1,4 +1,4 @@
-FROM itsafeaturemythic/mythic_python_base:latest
+FROM itsafeaturemythic/python38_sanic_c2profile:0.0.5
 
 RUN apt update && apt install wget nuget -y
 RUN wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
