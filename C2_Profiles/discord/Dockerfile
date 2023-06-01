@@ -1,16 +1,20 @@
-FROM itsafeaturemythic/mythic_python_base:latest
+FROM itsafeaturemythic/mythic_python_dotnet:latest
 
-RUN apt update && apt install wget nuget -y
-RUN wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-RUN dpkg -i packages-microsoft-prod.deb
-RUN rm packages-microsoft-prod.deb
+#RUN apt update && apt install wget nuget -y
+#RUN wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+#RUN dpkg -i packages-microsoft-prod.deb
+#RUN rm packages-microsoft-prod.deb
 
-RUN  apt-get update; \
-  apt-get install -y apt-transport-https && \
-  apt-get update && \
-  apt-get install -y dotnet-sdk-6.0
+#RUN  apt-get update; \
+#  apt-get install -y apt-transport-https && \
+#  apt-get update && \
+#  apt-get install -y dotnet-sdk-6.0
 
-COPY ["requirements.txt", "/requirements.txt"]
-RUN pip install -r /requirements.txt
+#COPY ["requirements.txt", "/requirements.txt"]
+#RUN pip install -r /requirements.txt
+#ENTRYPOINT ["/Mythic/mythic/c2_service.sh"]
 
-ENTRYPOINT ["/Mythic/mythic/c2_service.sh"]
+
+WORKDIR /Mythic/
+COPY [".", "."]
+CMD ["python3", "main.py"]

@@ -1,5 +1,6 @@
 from mythic_container.C2ProfileBase import *
-
+from pathlib import Path
+import os
 
 class Discord(C2Profile):
     name = "discord"
