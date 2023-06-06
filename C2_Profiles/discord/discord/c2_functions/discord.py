@@ -8,7 +8,7 @@ class Discord(C2Profile):
     author = "@tr41nwr3ck & @checkymander"
     is_p2p = False
     is_server_routed = False
-    server_binary_path = Path(os.path.join(".", "discord", "c2_code","server"))
+    server_binary_path = Path(os.path.join(".", "discord", "c2_code","discord"))
     server_folder_path = Path(os.path.join(".", "discord", "c2_code"))
     parameters = [
         C2ProfileParameter(
