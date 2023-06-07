@@ -37,8 +37,7 @@ Now, you might be wondering _when_ should you or a user do this to properly add 
 - Right Click the Text Channel you wish to use "Copy ID" and the channel ID will be copied to your clipboard
   
 ## Configuring C2 Profile in Mythic
-- Navigate to https://[ServerIP]:7443/new/c2profiles
+- Navigate to https://[ServerIP]:7443/new/payloadtypes
 - Start profile > View/Edit Config 
 - Enter your botToken And ChannelID
- 
-  
+- Start profile 
