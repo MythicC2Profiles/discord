@@ -23,8 +23,7 @@ Now, you might be wondering _when_ should you or a user do this to properly add 
 
 - Navigate to https://discord.com/developers/applications
 - Click New Application, Enter a name for your bot and click Create.
-- Select “Bot” from the Settings Menu > Add Bot > Yes
-- Next hit “Reset Token” and save your Token to the `config.json`
+- Next hit “Reset Token” and save your Token to use in Mythic
 - Navigate to Settings > Oauth2 and grab your ClientID
 - Replace the ClientID with yours and Navigate to the URL : https://discord.com/api/oauth2/authorize?client_id=<ClientID>&permissions=0&scope=bot
 - Select Your Server from the Menu and Authorize. Your bot should now appear your Discord Server
@@ -41,3 +40,6 @@ Now, you might be wondering _when_ should you or a user do this to properly add 
 - Start profile > View/Edit Config 
 - Enter your botToken And ChannelID
 - Start profile 
+
+## Troubleshooting
+- If your bot  is offline run: sudo ./mythic-cli discord restart
