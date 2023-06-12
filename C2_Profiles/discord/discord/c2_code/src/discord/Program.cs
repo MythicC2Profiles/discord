@@ -21,7 +21,7 @@ namespace C2Send
             {
 
 #if DEBUG
-                ServerConf = JsonConvert.DeserializeObject<ServerConfig>(System.IO.File.ReadAllText(@"C:\Users\scott\source\repos\discord\C2_Profiles\discord\c2_code\config.json")) ?? new ServerConfig();
+                ServerConf = JsonConvert.DeserializeObject<ServerConfig>(System.IO.File.ReadAllText(@"C:\Users\dev\source\repos\discord\C2_Profiles\discord\c2_code\config.json")) ?? new ServerConfig();
 #else
                 ServerConf = JsonConvert.DeserializeObject<ServerConfig>(System.IO.File.ReadAllText(@"config.json")) ?? new ServerConfig();
 #endif
