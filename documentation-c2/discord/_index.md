@@ -49,12 +49,11 @@ The profile reads a `config.json` file for the required tokens, channel to write
 ## Generating a token
 
 - Navigate to https://discord.com/developers/applications
-- Click New Application, Enter your BotName and click Create.
-- Select “Bot” from the Settings Menu > Add Bot > Yes
+- Click New Application, Enter your Bot name and click create.
 - Next hit “Reset Token” and save your Token
 - Navigate to Settings > Oauth2 and grab your ClientID
-- Replace the ClientID with yours and Navigate to the URL : https://discord.com/api/oauth2/authorize?client_id=<ClientID>&permissions=0&scope=bot
-- Select Your Server from the Menu and Authorise. Your bot should now appear your Discord Server.
+- Replace the ClientID with yours and navigate to the URL : https://discord.com/api/oauth2/authorize?client_id=<ClientID>&permissions=0&scope=bot
+- Select your server from the menu and Authorise. Your bot should now appear your Discord server.
 
 ### Profile Options
 #### Discord Channel ID
@@ -104,7 +103,7 @@ All message contents are written in plaintext and will be available to anyone wh
 
 ## Development
 
-All of the code for the server is .NET 6 and located in `C2_Profiles/discord/c2_code/discord`.
+All of the code for the server is .NET 7 and located in `C2_Profiles/discord/discord/c2_code`.
 
 The server will be notified of any new messages written in the specified channel, it will deserialize the message and attempt to determine whether `to_server` is set to `true` or `false` if `true` then it forwards the message to the Mythic server and writes the response to the channel. If not, it does nothing.
 
