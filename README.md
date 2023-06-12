@@ -2,9 +2,6 @@
 
 A C2 profile that uses the Discord REST API for communication. 
 
-
-The c2 profile has `mythic_c2_container==0.0.23` PyPi package installed and reports to Mythic as version "4".
-
 ## How to install an agent in this format within Mythic
 
 When it's time for you to test out your install or for another user to install your c2 profile, it's pretty simple. Within Mythic you can run the `mythic-cli` binary to install this in one of three ways:
