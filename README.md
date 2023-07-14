@@ -30,5 +30,7 @@ When it's time for you to test out your install or for another user to install y
 - Enter your botToken And ChannelID
 - Start profile 
 
+![Screenshot](Example-config.png)
+
 ## Troubleshooting
 - If your bot  is offline run: sudo ./mythic-cli discord restart
