@@ -1,0 +1,36 @@
+﻿syntax = "proto3";
+option go_package = "github.com/its-a-feature/Mythic/grpc/services";
+package pushC2Services;
+
+
+service PushC2 {
+  // rpc function(messageFromClient) messageToClient
+  rpc StartPushC2Streaming (stream PushC2MessageFromAgent) returns (stream PushC2MessageFromMythic) {}
+  rpc StartPushC2StreamingOneToMany (stream PushC2MessageFromAgent) returns (stream PushC2MessageFromMythic) {}
+}
+
+// agent sends along the base64 message like normal and c2 profile adds in c2 profile name
+// this is all normal c2 profiles pass along to mythic anyway
+// C2ProfileName is required
+// RemoteIP should be the IP of the remote connection to the c2 profile if known
+// Message is a base64 decoded message if you want the c2 profile to base64 decode what the agents are saying
+// Base64Message is what an agent would normally send. This is mutually exclusive with Message
+// TrackingID is some custom string that the c2 server provides so that it can correlate input with output from the stream
+message PushC2MessageFromAgent {
+  string C2ProfileName      = 1;
+  string RemoteIP           = 2;
+  bytes  Message            = 3;
+  string OuterUUID          = 4;
+  bytes  Base64Message      = 5;
+  string TrackingID         = 6;
+  bool   AgentDisconnected  = 7;
+}
+
+// mythic sends along success/error information if any
+// mythic sends along the messages
+message PushC2MessageFromMythic  {
+bool   Success                = 1;
+string Error                  = 2;
+bytes  Message                = 3;
+string TrackingID             = 4;
+}

@@ -1,48 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
+using discord.Models.Server;
+using Google.Protobuf;
+using Grpc.Core;
+using Grpc.Net.Client;
+using PushC2Services;
+using IDiscordClient = discord.Models.Server.IDiscordClient;
 
-namespace C2Send.Clients
+namespace discord.Clients
 {
-    public class MythicClient
+    public class MythicClient : IMythicClient
     {
-        private HttpClient mythicClient = new HttpClient();
-
-        public MythicClient()
+        private readonly GrpcChannel _mythicChannel;
+        private readonly PushC2.PushC2Client _mythicConnection;
+        private readonly IDiscordClient _discordClient;
+        private readonly AsyncDuplexStreamingCall<PushC2MessageFromAgent, PushC2MessageFromMythic> _mythicClient;
+        public MythicClient(IDiscordClient discordClient)
         {
-            mythicClient.DefaultRequestHeaders.Add("mythic", "discord");
-            ServicePointManager.DefaultConnectionLimit = 10;
+            _discordClient = discordClient;
+#if DEBUG
+            _mythicChannel = GrpcChannel.ForAddress("https://10.30.26.108:17444");
+#else
+            _mythicChannel = GrpcChannel.ForAddress("https://127.0.0.1:17444");
+#endif
+            _mythicConnection = new PushC2.PushC2Client(_mythicChannel);
+            _mythicClient = _mythicConnection.StartPushC2StreamingOneToMany();
+            _mythicClient.RequestStream.WriteAsync(new PushC2MessageFromAgent()
+            {
+                C2ProfileName = "discord"
+            }).Wait();
         }
 
-        public async Task<string> SendToMythic(string data)
+        public async Task<string> SendToMythic(string id, string data)
         {
-#if DEBUG
-            string url = "http://192.168.4.201:17443/api/v1.4/agent_message";
-#else
-            string url = Environment.GetEnvironmentVariable("MYTHIC_ADDRESS");
-#endif
-
-            try //POST  Message
-            {
-                HttpContent postBody = new StringContent(data);
-                var response = await mythicClient.PostAsync(url, postBody);
-                return await response.Content.ReadAsStringAsync() ?? "";
-            }
-            catch (WebException ex)
-            {
-                Console.WriteLine($"[SendToMythic] WebException: {ex.Message} - {ex.Status}");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"[SendToMythic] Exception: {e.Message}");
-                Console.WriteLine(e.InnerException);
-                Console.WriteLine(e.StackTrace);
-            };
-
+            await _mythicClient.RequestStream.WriteAsync(new PushC2MessageFromAgent { 
+                C2ProfileName = "discord",
+                Base64Message = ByteString.CopyFrom(data, Encoding.UTF8),
+                TrackingID = id,
+                RemoteIP = "",
+            });
             return "";
+        }
+        public async Task<string> ReceiveFromMythicAsync()
+        {
+            while (true)
+            {
+                await foreach(var message in _mythicClient.ResponseStream.ReadAllAsync())
+                {
+
+                }
+            }
         }
     }
 }

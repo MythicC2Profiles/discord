@@ -1,11 +1,10 @@
-﻿using C2Send.Models.Server;
-using C2Send.Clients;
-using Discord;
+﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using Discord.Models.Discord;
 using Newtonsoft.Json;
+using discord.Clients;
+using discord;
 
 namespace C2Send
 {
@@ -26,7 +25,7 @@ namespace C2Send
                 ServerConf = JsonConvert.DeserializeObject<ServerConfig>(System.IO.File.ReadAllText(@"config.json")) ?? new ServerConfig();
 #endif
 
-                if (ServerConf.IsAnyNullOrEmpty())
+                if (!ServerConf.IsValid())
                 {
                     Console.WriteLine("[Main] Config is null or empty.");
                     return;
@@ -45,31 +44,11 @@ namespace C2Send
         }
         public static async Task AsyncMain(string[] args)
         {
-
-
-            using (var services = ConfigureServices())
+            var containerBuilder = discord.ContainerBuilder.Build();
+            var container = containerBuilder.Build();
+            using (var scope = container.BeginLifetimeScope())
             {
-                var client = services.GetRequiredService<DiscordSocketClient>();
-
-                // Tokens should be considered secret data and never hard-coded.
-                // We can read from the environment variable to avoid hard coding.
-                await client.LoginAsync(TokenType.Bot, ServerConf.BotToken);
-                await client.StartAsync();
-
-                // Here we initialize the logic required to register our commands.
-                await services.GetRequiredService<CommandHandlingService>().InitializeAsync();
-
-                await Task.Delay(Timeout.Infinite);
             }
-        }
-        private static ServiceProvider ConfigureServices()
-        {
-            return new ServiceCollection()
-                .AddSingleton<DiscordSocketClient>()
-                .AddSingleton<CommandService>()
-                .AddSingleton<CommandHandlingService>()
-                .AddSingleton<HttpClient>()
-                .BuildServiceProvider();
         }
     }
 }

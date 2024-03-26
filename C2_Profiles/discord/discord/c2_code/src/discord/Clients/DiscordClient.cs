@@ -1,0 +1,91 @@
+﻿using discord.Models.Server;
+using Discord;
+using Discord.Models.Mythic;
+using Discord.WebSocket;
+using Newtonsoft.Json;
+using IDiscordClient = discord.Models.Server.IDiscordClient;
+
+namespace discord.Clients
+{
+    public class DiscordClient : IDiscordClient
+    {
+        private readonly DiscordSocketClient _client;
+        private readonly HttpClient _httpClient;
+        private readonly IMythicClient _mythicClient;
+        private readonly string _uuid;
+        private readonly IServerConfig _config;
+        public DiscordClient(IMythicClient mythicClient, IServerConfig config)
+        {
+            var discordConfig = new DiscordSocketConfig()
+            {
+                GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent
+            };
+            _config = config;
+            _mythicClient = mythicClient;
+            _uuid = Guid.NewGuid().ToString();
+            _httpClient = new HttpClient();
+            _client = new DiscordSocketClient(discordConfig);
+            _client.MessageReceived += MessageReceivedAsync;
+            _client.LoginAsync(TokenType.Bot, config.BotToken).Wait();
+            _client.StartAsync();
+        }
+
+        private async Task MessageReceivedAsync(SocketMessage message)
+        {
+            MythicMessageWrapper discordMessage;
+            if (message.Attachments.Count > 0 && message.Attachments.FirstOrDefault().Filename.EndsWith("server"))
+            {
+                discordMessage = JsonConvert.DeserializeObject<MythicMessageWrapper>(await GetFileContentsAsync(message.Attachments.FirstOrDefault().Url));
+            }
+            else
+            {
+                discordMessage = JsonConvert.DeserializeObject<MythicMessageWrapper>(message.Content);
+            }
+
+            if (discordMessage is not null && discordMessage.to_server) //It belongs to us
+            {
+                Console.WriteLine("Got Message: " + discordMessage.message);
+                _ = message.DeleteAsync();
+                await _mythicClient.SendToMythic(discordMessage.sender_id, discordMessage.message);
+            }
+        }
+        public async Task WriteToChannel(string message, string id)
+        {
+            MythicMessageWrapper discordMessage = new MythicMessageWrapper()
+            {
+                to_server = false,
+                sender_id = _uuid,
+                message = message,
+            };
+
+            ITextChannel channel = (ITextChannel)_client.GetChannel(ulong.Parse(_config.ChannelID));
+
+            if (message.Length > 1950)
+            {
+                await channel.SendFileAsync(JsonConvert.SerializeObject(discordMessage), discordMessage.sender_id + ".txt");
+            }
+            else
+            {
+                await channel.SendMessageAsync(JsonConvert.SerializeObject(discordMessage));
+            }
+
+        }
+        private async Task<string> GetFileContentsAsync(string url)
+        {
+            string message;
+            using (HttpResponseMessage response = await _httpClient.GetAsync(url))
+            {
+                using (HttpContent content = response.Content)
+                {
+                    message = await content.ReadAsStringAsync();
+                }
+            }
+            return await Unescape(message) ?? "";
+        }
+        private async Task<string> Unescape(string message)
+        {
+            return message.TrimStart('"').TrimEnd('"').Replace("\\\"", "\"");
+
+        }
+    }
+}
