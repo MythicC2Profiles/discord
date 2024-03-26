@@ -9,5 +9,6 @@ namespace discord.Models.Server
     public interface IDiscordClient
     {
         public Task WriteToChannel(string data, string id);
+        public Task Start();
     }
 }

@@ -4,7 +4,6 @@ using Google.Protobuf;
 using Grpc.Core;
 using Grpc.Net.Client;
 using PushC2Services;
-using IDiscordClient = discord.Models.Server.IDiscordClient;
 
 namespace discord.Clients
 {
@@ -12,43 +11,44 @@ namespace discord.Clients
     {
         private readonly GrpcChannel _mythicChannel;
         private readonly PushC2.PushC2Client _mythicConnection;
-        private readonly IDiscordClient _discordClient;
-        private readonly AsyncDuplexStreamingCall<PushC2MessageFromAgent, PushC2MessageFromMythic> _mythicClient;
-        public MythicClient(IDiscordClient discordClient)
+        private readonly AsyncDuplexStreamingCall<PushC2MessageFromAgent, PushC2MessageFromMythic> _mythicConnector;
+        public event EventHandler<PushC2MessageFromMythic> OnMessageReceived;
+        public MythicClient()
         {
-            _discordClient = discordClient;
 #if DEBUG
             _mythicChannel = GrpcChannel.ForAddress("https://10.30.26.108:17444");
 #else
             _mythicChannel = GrpcChannel.ForAddress("https://127.0.0.1:17444");
 #endif
             _mythicConnection = new PushC2.PushC2Client(_mythicChannel);
-            _mythicClient = _mythicConnection.StartPushC2StreamingOneToMany();
-            _mythicClient.RequestStream.WriteAsync(new PushC2MessageFromAgent()
+            _mythicConnector = _mythicConnection.StartPushC2StreamingOneToMany();
+            _mythicConnector.RequestStream.WriteAsync(new PushC2MessageFromAgent()
             {
                 C2ProfileName = "discord"
             }).Wait();
         }
 
-        public async Task<string> SendToMythic(string id, string data)
+        public async Task SendToMythic(string id, string data)
         {
-            await _mythicClient.RequestStream.WriteAsync(new PushC2MessageFromAgent { 
+            await _mythicConnector.RequestStream.WriteAsync(new PushC2MessageFromAgent { 
                 C2ProfileName = "discord",
                 Base64Message = ByteString.CopyFrom(data, Encoding.UTF8),
                 TrackingID = id,
                 RemoteIP = "",
             });
-            return "";
         }
-        public async Task<string> ReceiveFromMythicAsync()
+        public async Task ReceiveFromMythicAsync()
         {
-            while (true)
+            _ = Task.Run(async () =>
             {
-                await foreach(var message in _mythicClient.ResponseStream.ReadAllAsync())
+                await foreach (var message in _mythicConnector.ResponseStream.ReadAllAsync())
                 {
-
+                    if (OnMessageReceived != null)
+                    {
+                        OnMessageReceived(this, _mythicConnector.ResponseStream.Current);
+                    }
                 }
-            }
+            });
         }
     }
 }

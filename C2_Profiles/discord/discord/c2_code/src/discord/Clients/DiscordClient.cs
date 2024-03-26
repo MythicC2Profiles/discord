@@ -14,20 +14,32 @@ namespace discord.Clients
         private readonly IMythicClient _mythicClient;
         private readonly string _uuid;
         private readonly IServerConfig _config;
+        public async Task Start()
+        {
+            await Task.Delay(Timeout.Infinite);
+        }
         public DiscordClient(IMythicClient mythicClient, IServerConfig config)
         {
             var discordConfig = new DiscordSocketConfig()
             {
                 GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent
             };
-            _config = config;
-            _mythicClient = mythicClient;
             _uuid = Guid.NewGuid().ToString();
-            _httpClient = new HttpClient();
+            _config = config;
             _client = new DiscordSocketClient(discordConfig);
             _client.MessageReceived += MessageReceivedAsync;
             _client.LoginAsync(TokenType.Bot, config.BotToken).Wait();
             _client.StartAsync();
+            _httpClient = new HttpClient();
+            _mythicClient = mythicClient;
+            _mythicClient.ReceiveFromMythicAsync();
+            _mythicClient.OnMessageReceived += _mythicClient_OnMessageReceived;
+
+        }
+
+        private void _mythicClient_OnMessageReceived(object? sender, PushC2Services.PushC2MessageFromMythic e)
+        {
+            this.WriteToChannel(e.Message.ToStringUtf8(), e.TrackingID);
         }
 
         private async Task MessageReceivedAsync(SocketMessage message)
