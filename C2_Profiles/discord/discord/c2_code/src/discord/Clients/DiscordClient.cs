@@ -16,6 +16,10 @@ namespace discord.Clients
         private readonly IServerConfig _config;
         public async Task Start()
         {
+            Console.WriteLine("Logging in with token: " + _config.BotToken);
+            await _client.LoginAsync(TokenType.Bot, _config.BotToken);
+            Console.WriteLine(_client.LoginState);
+            Console.WriteLine("Starting Loop.");
             await Task.Delay(Timeout.Infinite);
         }
         public DiscordClient(IMythicClient mythicClient, IServerConfig config)
@@ -28,7 +32,6 @@ namespace discord.Clients
             _config = config;
             _client = new DiscordSocketClient(discordConfig);
             _client.MessageReceived += MessageReceivedAsync;
-            _client.LoginAsync(TokenType.Bot, config.BotToken).Wait();
             _client.StartAsync();
             _httpClient = new HttpClient();
             _mythicClient = mythicClient;
@@ -44,6 +47,7 @@ namespace discord.Clients
 
         private async Task MessageReceivedAsync(SocketMessage message)
         {
+            Console.WriteLine("Message Received: " + message.Content);
             MythicMessageWrapper discordMessage;
             if (message.Attachments.Count > 0 && message.Attachments.FirstOrDefault().Filename.EndsWith("server"))
             {
@@ -68,6 +72,7 @@ namespace discord.Clients
                 to_server = false,
                 sender_id = _uuid,
                 message = message,
+                client_id = id,
             };
 
             ITextChannel channel = (ITextChannel)_client.GetChannel(ulong.Parse(_config.ChannelID));

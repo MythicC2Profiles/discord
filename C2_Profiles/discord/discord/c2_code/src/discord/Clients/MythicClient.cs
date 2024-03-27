@@ -16,9 +16,9 @@ namespace discord.Clients
         public MythicClient()
         {
 #if DEBUG
-            _mythicChannel = GrpcChannel.ForAddress("https://10.30.26.108:17444");
+            _mythicChannel = GrpcChannel.ForAddress("http://10.30.26.108:17444");
 #else
-            _mythicChannel = GrpcChannel.ForAddress("https://127.0.0.1:17444");
+            _mythicChannel = GrpcChannel.ForAddress("http://127.0.0.1:17444");
 #endif
             _mythicConnection = new PushC2.PushC2Client(_mythicChannel);
             _mythicConnector = _mythicConnection.StartPushC2StreamingOneToMany();
