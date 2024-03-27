@@ -1,6 +1,6 @@
 # discord
 
-A C2 profile that uses the Discord REST API for communication. 
+A C2 profile that uses the Discord REST API for communication. V2 added support for Push profiles to help with rate limiting issues.
 
 ## How to install an agent in this format within Mythic
 
