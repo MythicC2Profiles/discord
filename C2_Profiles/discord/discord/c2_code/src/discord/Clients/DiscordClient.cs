@@ -71,7 +71,7 @@ namespace discord.Clients
             if (discordMessage is not null && discordMessage.to_server) //It belongs to us
             {
                 Console.WriteLine("Got Message: " + discordMessage.message);
-                //_ = message.DeleteAsync();
+                _ = message.DeleteAsync();
                 await _mythicClient.SendToMythic(discordMessage.sender_id, discordMessage.message);
             }
         }
