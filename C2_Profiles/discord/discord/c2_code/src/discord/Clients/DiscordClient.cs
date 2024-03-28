@@ -49,6 +49,16 @@ namespace discord.Clients
         {
             Console.WriteLine("Message Received: " + message.Content);
             MythicMessageWrapper discordMessage;
+
+            if(message.Attachments.Count > 0)
+            {
+                foreach(var  attachment in message.Attachments)
+                {
+                    Console.WriteLine(attachment.Filename);
+                    Console.WriteLine(attachment.Url);
+                }
+            }
+
             if (message.Attachments.Count > 0 && message.Attachments.FirstOrDefault().Filename.EndsWith("server"))
             {
                 discordMessage = JsonConvert.DeserializeObject<MythicMessageWrapper>(await GetFileContentsAsync(message.Attachments.FirstOrDefault().Url));
@@ -61,7 +71,7 @@ namespace discord.Clients
             if (discordMessage is not null && discordMessage.to_server) //It belongs to us
             {
                 Console.WriteLine("Got Message: " + discordMessage.message);
-                _ = message.DeleteAsync();
+                //_ = message.DeleteAsync();
                 await _mythicClient.SendToMythic(discordMessage.sender_id, discordMessage.message);
             }
         }
@@ -79,7 +89,10 @@ namespace discord.Clients
 
             if (message.Length > 1950)
             {
-                await channel.SendFileAsync(JsonConvert.SerializeObject(discordMessage), discordMessage.sender_id + ".txt");
+                using (MemoryStream stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(System.Text.Json.JsonSerializer.Serialize(discordMessage))))
+                {
+                    await channel.SendFileAsync(stream, discordMessage.client_id);
+                }
             }
             else
             {
@@ -96,7 +109,13 @@ namespace discord.Clients
                 {
                     message = await content.ReadAsStringAsync();
                 }
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("Error getting file contents.");
+                    Console.WriteLine(response.StatusCode.ToString());
+                }
             }
+            Console.WriteLine(message);
             return await Unescape(message) ?? "";
         }
         private async Task<string> Unescape(string message)

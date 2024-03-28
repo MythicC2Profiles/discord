@@ -7,7 +7,6 @@ namespace discord.Clients
     {
         public ServerConfig()
         {
-            Console.WriteLine("Server Config.");
 #if DEBUG
             string configText = File.ReadAllText(@"../../../../discord/dev_config.json");
             var configValues = JsonSerializer.Deserialize<Dictionary<string, string>>(configText);

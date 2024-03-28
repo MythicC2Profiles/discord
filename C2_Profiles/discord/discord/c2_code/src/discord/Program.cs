@@ -8,7 +8,6 @@ namespace C2Send
 {
     class Program
     {
-        public static ServerConfig ServerConf;
         /// <summary>
         /// Main loop
         /// </summary>
