@@ -21,21 +21,35 @@ namespace discord.Clients
             _mythicChannel = GrpcChannel.ForAddress("http://127.0.0.1:17444");
 #endif
             _mythicConnection = new PushC2.PushC2Client(_mythicChannel);
-            _mythicConnector = _mythicConnection.StartPushC2StreamingOneToMany();
-            _mythicConnector.RequestStream.WriteAsync(new PushC2MessageFromAgent()
+            try
             {
-                C2ProfileName = "discord"
-            }).Wait();
+                _mythicConnector = _mythicConnection.StartPushC2StreamingOneToMany();
+                _mythicConnector.RequestStream.WriteAsync(new PushC2MessageFromAgent()
+                {
+                    C2ProfileName = "discord"
+                }).Wait();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"[MythicClient] {e.ToString()}");
+            }
         }
-
         public async Task SendToMythic(string id, string data)
         {
-            await _mythicConnector.RequestStream.WriteAsync(new PushC2MessageFromAgent { 
-                C2ProfileName = "discord",
-                Base64Message = ByteString.CopyFrom(data, Encoding.UTF8),
-                TrackingID = id,
-                RemoteIP = "",
-            });
+            try
+            {
+                await _mythicConnector.RequestStream.WriteAsync(new PushC2MessageFromAgent
+                {
+                    C2ProfileName = "discord",
+                    Base64Message = ByteString.CopyFrom(data, Encoding.UTF8),
+                    TrackingID = id,
+                    RemoteIP = "",
+                });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"[SendToMythic] {e.ToString()}");
+            }
         }
         public async Task ReceiveFromMythicAsync()
         {
