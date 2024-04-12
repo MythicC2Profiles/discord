@@ -140,7 +140,7 @@ namespace discord.Clients
 
             if (message.Length > 1950)
             {
-                using (MemoryStream stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(System.Text.Json.JsonSerializer.Serialize(discordMessage))))
+                using (MemoryStream stream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes(System.Text.Json.JsonSerializer.Serialize(discordMessage))))
                 {
                     try { 
                         await _channel.SendFileAsync(stream, discordMessage.client_id);
