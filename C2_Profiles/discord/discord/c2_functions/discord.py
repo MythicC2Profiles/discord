@@ -98,4 +98,11 @@ class Discord(C2Profile):
             default_value="",
             required=False,
         ),
+        C2ProfileParameter(
+            name="killdate",
+            description="Kill Date",
+            parameter_type=ParameterType.Date,
+            default_value=365,
+            required=False,
+        ),
     ]

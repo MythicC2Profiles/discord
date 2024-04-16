@@ -400,3 +400,4 @@ FodyWeavers.xsd
 *\C2_Profiles\discord\c2_code\src\discord\bin\*
 *\C2_Profiles\discord\c2_code\src\.vs\*
 *\c2_code\src\discord\obj\*
+*dev_config.json
