@@ -12,8 +12,8 @@ When it's time for you to test out your install or for another user to install y
 
 - Navigate to https://discord.com/developers/applications
 - Click New Application, Enter a name for your bot and click Create.
-- Next hit “Reset Token” and save your Token to use in Mythic
 - Navigate to Bot and turn on MESSAGE CONTENT INTENT
+- Next hit “Reset Token” and save your Token to use in Mythic
 - Navigate to Settings > Oauth2 and grab your ClientID
 - Replace the ClientID with yours and Navigate to the URL : https://discord.com/api/oauth2/authorize?client_id=<ClientID>&permissions=0&scope=bot
 - Select Your Server from the Menu and Authorize. Your bot should now appear your Discord Server
